@@ -44,6 +44,24 @@
   .plot-item .sb{font-size:12.5px;color:var(--muted)}
   .plot-item .hi{float:right;font-size:12px;color:var(--wine);font-weight:700;margin-top:2px}
 
+  /* ---------- кадастровый номер ---------- */
+  .k-row{display:flex;gap:8px}
+  .k-input{flex:1;min-width:0;border:1px solid #d9c9a8;border-radius:9px;padding:9px 12px;font:inherit;font-size:14px;background:#fff}
+  .k-input:focus{outline:2px solid rgba(109,26,45,.25);border-color:var(--wine)}
+  .k-btn-solid{border:0;border-radius:9px;background:var(--wine);color:#fff;padding:9px 16px;font-size:14px;cursor:pointer}
+  .k-btn-solid:hover{background:#8a2438}
+  .k-card{margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+  .k-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  .k-num{font-weight:700;font-family:Georgia,serif;font-size:16px;color:#5a1220}
+  .k-list{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;margin:0}
+  .k-list dt{color:var(--muted)}
+  .k-list dd{font-weight:600;margin:0}
+  .k-suggest{margin-top:10px;font-size:13px;background:#f8f1df;border:1px solid #e8d9ac;border-radius:8px;padding:8px 10px;color:#6b5410}
+  .k-btn{border:1px solid #c9a227;background:#fdf6e3;border-radius:7px;padding:4px 10px;font-size:12.5px;cursor:pointer;color:#7a5c10;margin-left:6px}
+  .k-links{margin-top:10px;font-size:13px}
+  .k-links a{color:var(--wine);font-weight:600}
+  .k-error{margin-top:10px;font-size:13px;color:#8f2f1f;background:#faece9;border:1px solid #e5bfb7;border-radius:8px;padding:8px 10px}
+
   /* ---------- карта ---------- */
   .map-box svg{width:100%;height:auto;display:block}
   .map-dot{cursor:pointer}
@@ -145,6 +163,16 @@
 <main class="wrap">
   <!-- ======== левая колонка ======== -->
   <aside>
+    <section class="panel">
+      <h2>Кадастровый номер участка</h2>
+      <div class="k-row">
+        <input id="kadInput" class="k-input" type="text" placeholder="23:43:0030108:123" autocomplete="off" spellcheck="false">
+        <button id="kadBtn" class="k-btn-solid" type="button">Справка</button>
+      </div>
+      <div id="cadastralBox"></div>
+      <p class="hint">По номеру определяются регион, район и квартал. В продакшене здесь будут фактические данные ЕГРН (площадь, ВРИ, координаты из выгрузки ППК / map.ru), а климат — считаться по координатам участка. Числа в макете — заглушки.</p>
+    </section>
+
     <section class="panel">
       <h2><span class="step">1</span>Выберите участок</h2>
       <div id="plotList"></div>
@@ -412,11 +440,11 @@ function renderMap(){
   const W = 340, H = 460;
   const PLACE = [
     { id:'tver',         x:118, y:50,  label:'Тверь',        lx:14,  ly:4,   anchor:'start'  },
-    { id:'sevastopol',   x:34,  y:326, label:'Севастополь',  lx:14,  ly:4,   anchor:'start'  },
-    { id:'bakhchisaray', x:100, y:356, label:'Бахчисарай',   lx:14,  ly:4,   anchor:'start'  },
-    { id:'anapa',        x:168, y:318, label:'Анапа',        lx:0,   ly:-13, anchor:'middle' },
-    { id:'krymsk',       x:262, y:322, label:'Крымск',       lx:0,   ly:-13, anchor:'middle' },
-    { id:'abrau',        x:206, y:360, label:'Абрау-Дюрсо',  lx:0,   ly:17,  anchor:'middle' }
+    { id:'sevastopol',   x:34,  y:318, label:'Севастополь',  lx:14,  ly:4,   anchor:'start'  },
+    { id:'bakhchisaray', x:100, y:350, label:'Бахчисарай',   lx:14,  ly:4,   anchor:'start'  },
+    { id:'anapa',        x:168, y:312, label:'Анапа',        lx:0,   ly:-13, anchor:'middle' },
+    { id:'krymsk',       x:262, y:316, label:'Крымск',       lx:0,   ly:-13, anchor:'middle' },
+    { id:'abrau',        x:206, y:354, label:'Абрау-Дюрсо',  lx:0,   ly:17,  anchor:'middle' }
   ];
 
   const dots = PLACE.map(p => {
@@ -437,11 +465,11 @@ function renderMap(){
       <line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="#e3dbc6" stroke-dasharray="3 5"/>
       <text x="6" y="${y - 4}" font-size="10" fill="#b3a68c">${la}° с.ш.</text>
     `).join('')}
-    <path d="M0,396 C 60,386 130,402 190,392 C 250,384 300,398 ${W},390 L ${W},460 L 0,460 Z" fill="#cfe0e8"/>
-    <path d="M0,396 C 60,386 130,402 190,392 C 250,384 300,398 ${W},390" fill="none" stroke="#a9c4d1" stroke-width="1.5"/>
-    <text x="${W - 104}" y="436" font-size="11.5" fill="#5b7d8e" font-style="italic">Чёрное море</text>
-    <text x="18" y="296" font-size="11.5" fill="#9b8b72" font-style="italic">Крым</text>
-    <text x="278" y="290" font-size="11.5" fill="#9b8b72" font-style="italic">Кавказ</text>
+    <path d="M0,402 C 60,392 130,408 190,398 C 250,390 300,404 ${W},396 L ${W},460 L 0,460 Z" fill="#cfe0e8"/>
+    <path d="M0,402 C 60,392 130,408 190,398 C 250,390 300,404 ${W},396" fill="none" stroke="#a9c4d1" stroke-width="1.5"/>
+    <text x="${W - 104}" y="438" font-size="11.5" fill="#5b7d8e" font-style="italic">Чёрное море</text>
+    <text x="18" y="288" font-size="11.5" fill="#9b8b72" font-style="italic">Крым</text>
+    <text x="286" y="280" font-size="11.5" fill="#9b8b72" font-style="italic">Кавказ</text>
     ${dots}
   </svg>`;
 }
@@ -652,6 +680,61 @@ function drawHi(){
   </svg>`;
 }
 
+/* ================= кадастровый номер (демо) ================= */
+
+const REGIONS = {
+  23: 'Краснодарский край', 26: 'Ставропольский край', 61: 'Ростовская область',
+  91: 'Республика Крым', 92: 'город Севастополь', 69: 'Тверская область',
+  50: 'Московская область', 77: 'Москва'
+};
+const REGION_PLOT = { 23: 'krymsk', 91: 'bakhchisaray', 92: 'sevastopol', 69: 'tver' };
+
+/* детерминированный «генератор» заглушек: одинаковый номер — одинаковые цифры */
+function seedRand(str){
+  let h = 2166136261;
+  for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  return () => { h = (Math.imul(h, 1103515245) + 12345) >>> 0; return (h >>> 8) / 0x1000000; };
+}
+
+function renderCadastral(raw){
+  const box = document.getElementById('cadastralBox');
+  const num = raw.trim().replace(/[.\-–—]/g, ':').replace(/\s+/g, '');
+  const m = num.match(/^(\d{1,2}):(\d{1,2}):(\d{1,7}):(\d{1,9})$/);
+  if (!m) {
+    box.innerHTML = `<div class="k-error">Не похоже на кадастровый номер. Формат: <b>регион:район:квартал:участок</b>, например 23:43:0030108:123 или 91:07:010201:45.</div>`;
+    return;
+  }
+  const full = m[0], reg = +m[1];
+  const rnd = seedRand(full);
+  const regionName = REGIONS[reg] || 'регион с кодом ' + m[1];
+  const area = (2 + rnd() * 23).toFixed(1);
+  const pricePerHa = Math.round(150 + rnd() * 750);
+  const vri = ['Виноградарство', 'Садоводство', 'КФХ · растениеводство'][Math.floor(rnd() * 3)];
+  const linkPlot = REGION_PLOT[reg];
+  const pkk = 'https://pkk.rosreestr.ru/#/search/' + encodeURIComponent(full);
+
+  box.innerHTML = `
+    <div class="k-card">
+      <div class="k-head">
+        <span class="k-num">${full}</span>
+        <span class="pill plain">демо-заглушка</span>
+      </div>
+      <dl class="k-list">
+        <dt>Регион</dt><dd>${regionName}</dd>
+        <dt>Кадастровый район</dt><dd>код ${m[2]} (наименование — из справочника ЕГРН)</dd>
+        <dt>Кадастровый квартал</dt><dd>${m[3]}</dd>
+        <dt>Площадь</dt><dd>${String(area).replace('.', ',')} га</dd>
+        <dt>Категория · ВРИ</dt><dd>земли с/х назначения · ${vri}</dd>
+        <dt>Кадастровая стоимость</dt><dd>≈ ${(area * pricePerHa / 1000).toFixed(1).replace('.', ',')} млн ₽ (${pricePerHa} тыс ₽/га)</dd>
+        <dt>Координаты участка</dt><dd>из выгрузки ППК — в продакшене</dd>
+      </dl>
+      ${linkPlot
+        ? `<div class="k-suggest">Регион входит в демо-набор. Климат показан для ближайшей демо-точки: <b>${PLOTS[linkPlot].name}</b><button class="k-btn" data-plot="${linkPlot}" type="button">Открыть её климат</button></div>`
+        : `<div class="k-suggest">Регион пока вне демо-набора: в макете климат доступен для 6 демо-локаций юга и Твери.</div>`}
+      <div class="k-links"><a href="${pkk}" target="_blank" rel="noopener">Открыть участок в ППК Росреестра ↗</a></div>
+    </div>`;
+}
+
 /* ================= события ================= */
 
 function selectPlot(id){
@@ -677,6 +760,12 @@ document.getElementById('segYear').addEventListener('click', e => {
   state.year = b.dataset.v;
   document.querySelectorAll('#segYear button').forEach(x => x.classList.toggle('active', x === b));
   renderVerdict(); renderMatrix();
+});
+document.getElementById('kadBtn').addEventListener('click', () => renderCadastral(document.getElementById('kadInput').value));
+document.getElementById('kadInput').addEventListener('keydown', e => { if (e.key === 'Enter') renderCadastral(e.target.value); });
+document.getElementById('cadastralBox').addEventListener('click', e => {
+  const b = e.target.closest('.k-btn[data-plot]');
+  if (b) selectPlot(b.dataset.plot);
 });
 document.getElementById('segRcp').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
